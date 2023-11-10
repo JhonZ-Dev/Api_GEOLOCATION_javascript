@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geolocalización y Geocodificación Inversa Example</title>
+</head>
+<body>
+    <h1>Geolocalización y Geocodificación Inversa Example</h1>
+    <p id="demo">Haga clic en el botón para obtener su ubicación y ciudad.</p>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById("demo").innerHTML = "La geolocalización no es compatible con este navegador.";
+            }
+        }
+
+        function showPosition(position) {
+            // Obtener la latitud y longitud
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Mostrar la información de la ubicación
+            document.getElementById("demo").innerHTML = "Latitud: " + latitude + "<br>Longitud: " + longitude;
+
+            // Utilizar la API de Geocodificación Inversa con OpenStreetMap
+            const apiURL = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+            
+            // Hacer una solicitud HTTP para obtener información de la ubicación
+            fetch(apiURL)
+                .then(response => response.json())
+                .then(data => {
+                    // Extraer la ciudad desde la respuesta JSON
+                    const city = data.address.city || data.address.town || data.address.village || data.address.hamlet;
+                    
+                    // Mostrar la ciudad en la página
+                    document.getElementById("demo").innerHTML += "<br>Ciudad: " + city;
+                })
+                .catch(error => console.error('Error al obtener la información de la ubicación:', error));
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("demo").innerHTML = "El usuario denegó la solicitud de geolocalización."
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("demo").innerHTML = "La información de ubicación no está disponible."
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("demo").innerHTML = "La solicitud de geolocalización ha caducado."
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("demo").innerHTML = "Se produjo un error desconocido."
+                    break;
+            }
+        }
+    </script>
+
+    <button onclick="getLocation()">Obtener Ubicación y Ciudad</button>
+</body>
+</html>
