@@ -12,7 +12,16 @@
 
 
     <script>
-        
+        function getLocation() {
+            // Verificar si el navegador soporta la geolocalización
+            if (navigator.geolocation) {
+                // Obtener la ubicación
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                // Mostrar un mensaje de error si no es compatible
+                document.getElementById("demo").innerHTML = "La geolocalización no es compatible con este navegador.";
+            }
+        }
     </script>
 </body>
 </html>
