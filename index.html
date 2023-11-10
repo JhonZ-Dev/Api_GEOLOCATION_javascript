@@ -22,6 +22,12 @@
                 document.getElementById("demo").innerHTML = "La geolocalización no es compatible con este navegador.";
             }
         }
+        // Función que se ejecuta cuando se obtiene la ubicación
+        function showPosition(position) {
+            // Mostrar la información de la ubicación en el elemento con id "demo"
+            document.getElementById("demo").innerHTML = "Latitud: " + position.coords.latitude + "<br>Longitud: " + position.coords.longitude;
+        }
+
     </script>
 </body>
 </html>
